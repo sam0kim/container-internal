@@ -7,11 +7,49 @@
 - Mac 이외 OS 환경에서도 가급적 “Vagrant + VirtualBox” 사용을 권장드립니다.
 - Mac M1,M2 등 Vagrant + Virtualbox 환경을 지원하지 않는 경우 별도의 Ubuntu 환경을 권장드립니다. 
 
-### 실습도구 
+### 실습 도구 
 - Virtualbox 공식 다운로드 및 설치 https://www.virtualbox.org/wiki/Downloads
 - Vagrant 공식 다운로드 및 설치 https://www.vagrantup.com/downloads
 
-### 실습환경
+맥 OS기준 (M1제외) Virtualbox 및 Vagrant 설치 방법은 다음과 같습니다.
+
+설치 방법
+```bash
+# virtualbox 설치
+brew install virtualbox --cask
+# vagrant 설치
+brew install vagrant --cask
+```
+
+Virtualbox 설정
+- (설정1) 시스템 환경 설정에서 “Oracle” 허용 및 맥 재부팅
+```
+시스템 환경설정 > 보안 및 개인 정보 보호 > 일반 > 하단에 Oracle 관련 설치 허용
+```
+- (설정2) 네트워크 range 설정
+  (참고) https://www.virtualbox.org/manual/ch06.html#network_hostonly
+```bash
+$ sudo -i
+# mkdir -p /etc/vbox/
+# vi /etc/vbox/networks.conf
+* 0.0.0.0/0 ::/0
+```
+FAQ
+1) VM기동(vagrant up) 중 에러 메시지1
+```
+...
+VBoxManage: error: VBoxNetAdpCtl: Error while adding new interface: failed to open /dev/vboxnetctl: No such file or directory
+...
+```
+Sol) 위의 Virtualbox (설정1)을 확인해 주세요
+
+2) VM기동(vagrant up) 중 에러 메시지2
+```
+Valid ranges can be modified in the /etc/vbox/networks.conf file
+```
+Sol) 위의 Virtualbox (설정2)를 확인해 주세요
+
+### 실습 환경
 아래 Vagrantfile을 사용합니다.
 ```ruby
 BOX_IMAGE = "bento/ubuntu-18.04"
