@@ -5,7 +5,8 @@
 ### 실습 안내
 - Mac 환경(M1 제외) 에서 VirtualBox 와 Vagrant 기반으로 테스트 되었습니다
 - Mac 이외 OS 환경에서도 가급적 “Vagrant + VirtualBox” 사용을 권장드립니다.
-- Mac M1,M2 등 Vagrant + Virtualbox 환경을 지원하지 않는 경우 별도의 Ubuntu 환경을 권장드립니다. 
+- Mac M1,M2 등 Vagrant + Virtualbox 환경을 지원하지 않는 경우 별도의 Ubuntu(1804) 환경을 준비해주세요.
+> Vagrant 기반 실습환경 준비가 어려운 분들은 아래 "Vagrant 미지원 시 실습환경 갖추기"를 참고해주세요.
 
 ### 실습 도구 
 - Virtualbox 공식 다운로드 및 설치 https://www.virtualbox.org/wiki/Downloads
@@ -65,12 +66,6 @@ $pre_install = <<-SCRIPT
   sudo apt-get -y install tree &&
   sudo apt-get -y install jq &&
   sudo apt-get -y install bridge-utils
-
-  echo ">>>> install go <<<<<<"
-  curl -O https://storage.googleapis.com/golang/go1.15.7.linux-amd64.tar.gz > /dev/null 2>&1 &&
-  tar xf go1.15.7.linux-amd64.tar.gz &&
-  sudo mv go /usr/local/ &&
-  echo 'PATH=$PATH:/usr/local/go/bin' | tee /home/vagrant/.bash_profile
 
   echo ">>>>> install docker <<<<<<"
   sudo apt-get -y install apt-transport-https ca-certificates curl gnupg-agent software-properties-common > /dev/null 2>&1 &&
@@ -134,10 +129,37 @@ root@ubuntu1804:~#
 root@ubuntu1804:~# cd /tmp
 root@ubuntu1804:/tmp#
 ```
-Q. 실습경로를 제한하는 이유? virtualbox의 특수한 mount 경로 사용 시 심볼릭 링크 제한 등 실습이 원활하지 않을 수 있어 실습경로를 통일합니다.
-- 실습 exit : chroot, unshare, nsneter, docker exec 등 컨테이너 사용 시 각 실습이 끝나면 “exit” 로 컨테이너 프로세스를 종료해 주세요.
+> Q. 실습경로를 제한하는 이유? 
+> > virtualbox의 특수한 mount 경로 사용 시 심볼릭 링크 제한 등 실습이 원활하지 않을 수 있어 실습경로를 통일합니다.
+- 실습 종료 : chroot, unshare, nsneter, docker exec 등 컨테이너 사용 시 각 실습이 끝나면 “exit” 로 컨테이너 프로세스를 종료해 주세요.
 ```bash
 bash-4.4# exit
 exit
 root@ubuntu1804:/tmp#
+```
+
+## Vagrant 미지원 시 실습환경 갖추기
+- 본 가이드는 맥 m1,m2 (arm계열) 등 기타 OS에서 Vagrant 기반 실습환경 구성이 어려운 경우에 해당합니다.
+- Ubuntu(1804) 환경을 2개 준비해 주세요. * 무료클라우드 활용 등
+
+### 실습 환경 갖추기 
+각자 준비된 Ubuntu(1804) 환경에서 아래 설치 스크립트를 실행해 주세요
+- Pre-requisite
+```bash 
+apt-get update \
+&& apt-get -y install gcc \
+&& apt-get -y install make \
+&& apt-get -y install pkg-config \
+&& apt-get -y install libseccomp-dev \
+&& apt-get -y install tree \
+&& apt-get -y install jq \
+&& apt-get -y install bridge-utils
+```
+- Docker 설치
+```bash 
+apt-get -y install apt-transport-https ca-certificates curl gnupg-agent software-properties-common > /dev/null 2>&1 \
+&& curl -fsSL https://download.docker.com/linux/ubuntu/gpg | sudo apt-key add - \
+&& add-apt-repository "deb [arch=amd64] https://download.docker.com/linux/ubuntu $(lsb_release -cs) stable" \
+&& apt-get update \
+&& apt-get -y install docker-ce docker-ce-cli containerd.io > /dev/null 2>&1
 ```
