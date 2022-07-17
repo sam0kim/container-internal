@@ -6,7 +6,7 @@ overlay network 실습을 위한 vagrant 환경구성 방법을 설명합니다.
 ```
 overlaynw               # ----- 오버레이 네트워크 실습폴더
   ㄴ overlaynet          # ----- 다이내믹 오버레이 실습스크립트
-     arpd.py              # ----- arp daemon  
+     arpd.py              # ----- L2,L3 miss event를 catch하여 arp cache,fdb 등록 
      attach_ctn.sh        # ----- 컨테이너 생성 스크립트
      check.sh             # ----- check app_solicit. neighbor 이벤트 전송 활성화 여부
      create_overlay.sh    # ----- vxlan, bridge 생성 스크립트
