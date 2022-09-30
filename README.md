@@ -3,9 +3,8 @@
 
 ## 실습 환경 갖추기
 ### 실습 안내
-- Mac 환경(M1 제외) 에서 VirtualBox 와 Vagrant 기반으로 테스트 되었습니다
+- Mac 환경에서 VirtualBox 와 Vagrant 기반으로 테스트 되었습니다
 - Mac 이외 OS 환경에서도 가급적 “Vagrant + VirtualBox” 사용을 권장드립니다.
-- Mac M1,M2 등 Vagrant + Virtualbox 환경을 지원하지 않는 경우 별도의 Ubuntu(1804) 환경을 준비해주세요.
 > Vagrant 기반 실습환경 준비가 어려운 분들은 아래 "Vagrant 미지원 시 실습환경 갖추기"를 참고해주세요.
 
 ### 실습 도구 
@@ -52,6 +51,7 @@ Sol) 위의 Virtualbox (설정2)를 확인해 주세요
 
 ### 실습 환경
 아래 Vagrantfile을 사용합니다.
+- 주) Mac M1(arm계열) (참고) https://github.com/sam0kim/container-internal/blob/main/m1/Vagrantfile
 ```ruby
 BOX_IMAGE = "bento/ubuntu-18.04"
 HOST_NAME = "ubuntu1804"
