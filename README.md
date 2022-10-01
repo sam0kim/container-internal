@@ -3,7 +3,7 @@
 
 ## 실습 환경 갖추기
 ### 실습 안내
-- Mac 환경에서 VirtualBox 와 Vagrant 기반으로 테스트 되었습니다
+- Mac/윈도우 환경에서 VirtualBox 와 Vagrant 기반으로 테스트 되었습니다
 - Mac 이외 OS 환경에서도 가급적 “Vagrant + VirtualBox” 사용을 권장드립니다.
 > Vagrant 기반 실습환경 준비가 어려운 분들은 아래 "Vagrant 미지원 시 실습환경 갖추기"를 참고해주세요.
 
