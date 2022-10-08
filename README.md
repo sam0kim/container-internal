@@ -1,6 +1,7 @@
 # container-internal
 컨테이너 인터널 실습 리포입니다.  
-> 맥/윈도우 x86기반 환경을 안내합니다. Mac M1, M2 arm 계열환경안내는 https://github.com/sam0kim/container-internal/tree/main/m1 를 참고해 주세요 
+> 맥/윈도우 x86기반 환경을 안내합니다.  
+Mac M1, M2 arm 계열환경안내는 https://github.com/sam0kim/container-internal/tree/main/m1 를 참고해 주세요 
 
 ## 실습 환경 갖추기
 ### 실습 안내
