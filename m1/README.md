@@ -1,5 +1,6 @@
 # container-internal
-Mac arm (m1, m2) 계열 환경을 안내합니다
+Mac arm (m1, m2) 계열 환경을 안내합니다.  
+> VirtualBox 는 arm 계열 환경을 지원하지 않습니다. (2022.10 기준) 따라서 QEMU를 이용하여 VM 환경을 준비합니다. QEMU 에서 private network 지원에 제약이 있어 오버레이네트워크 등 분산VM 실습환경은 제공이 되지 않습니다. 이점 참고 부탁드립니다. 
 
 ## 실습 환경 갖추기
 ### 실습 안내
