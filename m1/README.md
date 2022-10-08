@@ -1,5 +1,5 @@
 # container-internal
-컨테이너 인터널 실습 리포입니다 
+Mac arm (m1, m2) 계열 환경을 안내합니다
 
 ## 실습 환경 갖추기
 ### 실습 안내
@@ -24,7 +24,7 @@ vagrant plugin install vagrant-qemu
 
 ### 실습 환경
 아래 Vagrantfile을 사용합니다.
-- Mac M1,arm계열 https://raw.githubusercontent.com/sam0kim/container-internal/main/m1/Vagrantfile
+- Mac M1,M2 arm계열 https://raw.githubusercontent.com/sam0kim/container-internal/main/m1/Vagrantfile
 
 Vagrant 기본 사용법. vagrant는 "Vagrantfile" 경로를 기준으로 동작합니다.
 ```bash
