@@ -1,10 +1,10 @@
 # container-internal
-컨테이너 인터널 실습 리포입니다 
+컨테이너 인터널 실습 리포입니다.  
+> 맥/윈도우 x86기반 환경을 안내합니다. Mac M1, M2 arm 계열환경안내는 https://github.com/sam0kim/container-internal/tree/main/m1 를 참고해 주세요 
 
 ## 실습 환경 갖추기
 ### 실습 안내
 - Mac/윈도우 환경에서 VirtualBox 와 Vagrant 기반으로 테스트 되었습니다  
-> Mac M1,M2 arm  환경안내 https://github.com/sam0kim/container-internal/tree/main/m1  
 - Mac 이외 OS 환경에서도 가급적 “Vagrant + VirtualBox” 사용을 권장드립니다.
 > Vagrant 기반 실습환경 준비가 어려운 분들은 아래 "Vagrant 미지원 시 실습환경 갖추기"를 참고해주세요.
 
@@ -53,7 +53,6 @@ Sol) 위의 Virtualbox (설정2)를 확인해 주세요
 ### 실습 환경
 아래 Vagrantfile을 사용합니다.
 - Mac/윈도우 Intel,x86계열 https://raw.githubusercontent.com/sam0kim/container-internal/main/Vagrantfile  
-> Mac M1,M2 arm 환경안내 https://github.com/sam0kim/container-internal/tree/main/m1  
 
 Vagrant 기본 사용법. vagrant는 "Vagrantfile" 경로를 기준으로 동작합니다.
 ```bash
