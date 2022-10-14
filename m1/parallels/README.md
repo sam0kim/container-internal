@@ -1,11 +1,9 @@
 # container-internal
-Mac arm (m1, m2) 계열 환경을 안내합니다.  
-> VirtualBox 는 arm 계열 환경을 지원하지 않습니다. (2022.10 기준) 따라서 QEMU를 이용하여 VM 환경을 준비합니다. QEMU 에서 private network 지원에 제약이 있어 오버레이네트워크 등 분산VM 실습환경은 제공이 되지 않습니다. 이점 참고 부탁드립니다. 
-> parallels 사용자는 다음을 참고해주세요. https://github.com/sam0kim/container-internal/tree/main/m1/parallels
+Mac arm (m1, m2) 계열 parallels 사용자 안내입니다.  
 
 ## 실습 환경 갖추기
 ### 실습 안내
-- Mac M1(arm) 환경에서 QEMU 와 Vagrant 기반으로 테스트 되었습니다
+- Mac M1(arm) 환경에서 Parallels 와 Vagrant 기반으로 테스트 되었습니다
 
 ### 실습 도구 
 - Vagrant 공식 다운로드 및 설치 https://www.vagrantup.com/downloads
@@ -17,16 +15,16 @@ Mac M1 환경에서 환경 설치 방법은 다음과 같습니다.
 # vagrant 설치
 brew install vagrant --cask
 
-# qemu 설치
-brew install qemu
+# parallels 다운로드 및 설치
+공식사이트 안내를 따라 주세요. https://www.parallels.com/kr/products/desktop/
 
 # plugin 설치
-vagrant plugin install vagrant-qemu
+vagrant plugin install vagrant-parallels
 ```
 
 ### 실습 환경
 아래 Vagrantfile을 사용합니다.
-- Mac M1,M2 arm계열 https://raw.githubusercontent.com/sam0kim/container-internal/main/m1/Vagrantfile
+- https://raw.githubusercontent.com/sam0kim/container-internal/main/m1/parallels/Vagrantfile
 
 Vagrant 기본 사용법. vagrant는 "Vagrantfile" 경로를 기준으로 동작합니다.
 ```bash
@@ -44,17 +42,17 @@ $ vagrant ssh <VM이름>
 ### 실습 참고
 - 실습 터미널 : VM 터미널 창을 두 개를 준비해주세요. (Vagrantfile 경로에서 실행)
 ```bash
-vagrant ssh ubuntu1804
+vagrant ssh ubuntu2004
 ```
 - 실습 계정 : root 계정을 기본으로 합니다.
 ```bash
-vagrant@ubuntu1804:~$ sudo -Es
-root@ubuntu1804:~#
+vagrant@ubuntu2004:~$ sudo -Es
+root@ubuntu2004:~#
 ```
 - 실습 경로 : /tmp 를 기본으로 합니다.
 ```bash
-root@ubuntu1804:~# cd /tmp
-root@ubuntu1804:/tmp#
+root@ubuntu2004:~# cd /tmp
+root@ubuntu2004:/tmp#
 ```
 > Q. 실습경로를 제한하는 이유? 
 > > virtualbox의 특수한 mount 경로 사용 시 심볼릭 링크 제한 등 실습이 원활하지 않을 수 있어 실습경로를 통일합니다.
@@ -62,5 +60,5 @@ root@ubuntu1804:/tmp#
 ```bash
 bash-4.4# exit
 exit
-root@ubuntu1804:/tmp#
+root@ubuntu2004:/tmp#
 ```
