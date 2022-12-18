@@ -1,0 +1,57 @@
+# 컨테이너 격리와 자원
+
+## PID네임스페이스
+
+### unshare PID네임스페이스
+unshare -fp --mount-proc /bin/sh
+
+
+## NETWORK 네임스페이스
+
+### 1:1 통신
+ip link add veth0 type veth peer name veth1;
+
+ip netns add RED;
+ip netns add BLUE;
+
+ip link set veth0 netns RED;
+ip link set veth1 netns BLUE;
+
+ip netns exec RED ip link set veth0 up;
+ip netns exec BLUE ip link set veth1 up;
+
+ip netns exec RED ip addr add 11.11.11.2/24 dev veth0;
+ip netns exec BLUE ip addr add 11.11.11.3/24 dev veth1;
+
+
+## USER네임스페이스
+
+### 일반계정 도커 컨테이너 실행
+docker run -it ubuntu /bin/sh
+
+### 일반계정 USER네임스페이스 Remap 
+unshare -U --map-root-user /bin/sh
+
+
+### Cgroups 생성
+tree -L 1 /sys/fs/cgroup/cpu
+
+cgcreate -a root -g cpu:mycgroup
+tree -L 1 /sys/fs/cgroup/cpu
+tree -L 1 /sys/fs/cgroup/cpu/mycgroup
+
+cat /sys/fs/cgroup/cpu/mycgroup/cpu.cfs_quota_us
+cat /sys/fs/cgroup/cpu/mycgroup/cpu.cfs_period_us
+
+cgset -r cpu.cfs_quota_us=30000 mycgroup
+cat /sys/fs/cgroup/cpu/mycgroup/cpu.cfs_quota_us
+
+cgexec -g cpu:mycgroup stress -c 1
+
+
+
+
+
+
+
+

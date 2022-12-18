@@ -1,0 +1,128 @@
+# Final Stage
+
+
+## 사전준비
+
+### 이미지 준비
+cd /tmp;
+wget https://raw.githubusercontent.com/sam0kim/container-internal/main/scripts/copy_tools.sh;
+bash copy_tools.sh;
+
+
+### 네트워크 준비
+ip netns add RED;
+ip netns add BLUE;
+
+ip link add veth0 netns RED type veth peer name veth1 netns BLUE;
+
+ip netns exec RED ip addr add dev veth0 11.11.11.2/24;
+ip netns exec RED ip link set veth0 up;
+
+ip netns exec BLUE ip addr add dev veth1 11.11.11.3/24;
+ip netns exec BLUE ip link set veth1 up;
+
+
+## RED 컨테이너 
+
+### RED Cgroups
+mkdir /sys/fs/cgroup/cpu/red;
+mkdir /sys/fs/cgroup/memory/red;
+
+echo 40000 > /sys/fs/cgroup/cpu/red/cpu.cfs_quota_us;
+echo 209715200 > /sys/fs/cgroup/memory/red/memory.limit_in_bytes;
+echo 0 > /sys/fs/cgroup/memory/red/memory.swappiness;
+
+### RED 격리
+unshare -m -u -i -fp nsenter --net=/var/run/netns/RED /bin/sh;
+
+### RED Cgroups 할당
+echo "1" > /sys/fs/cgroup/cpu/red/cgroup.procs;
+echo "1" > /sys/fs/cgroup/memory/red/cgroup.procs;
+
+### RED 파일시스템
+mkdir /redfs;
+mkdir /redfs/container;
+mkdir /redfs/work;
+mkdir /redfs/merge;
+
+mount -t overlay overlay -o lowerdir=/tmp/tools:/tmp/myroot,upperdir=/redfs/container,workdir=/redfs/work /redfs/merge
+
+mkdir -p /redfs/merge/put_old
+
+cd /redfs/merge;
+pivot_root . put_old;
+cd /;
+
+(루트와 put_old 비교해 봅니다. 보안언급)
+
+mount -t proc proc /proc;
+umount -l put_old;
+rm -rf put_old;
+
+(프로세스 확인 및 PID네임스페이스 격리 언급)
+ps -ef
+
+(호스트네임 조회 후 아래 호스트네임 변경)
+hostname RED
+
+
+## BLUE 컨테이너 
+
+### BLUE Cgroups
+mkdir /sys/fs/cgroup/cpu/blue;
+mkdir /sys/fs/cgroup/memory/blue;
+
+echo 40000 > /sys/fs/cgroup/cpu/blue/cpu.cfs_quota_us;
+echo 209715200 > /sys/fs/cgroup/memory/blue/memory.limit_in_bytes;
+echo 0 > /sys/fs/cgroup/memory/blue/memory.swappiness;
+
+### BLUE 격리
+unshare -m -u -i -fp nsenter --net=/var/run/netns/BLUE /bin/sh;
+
+### BLUE Cgroups 할당
+echo "1" > /sys/fs/cgroup/cpu/blue/cgroup.procs;
+echo "1" > /sys/fs/cgroup/memory/blue/cgroup.procs;
+
+### BLUE 파일시스템
+mkdir /bluefs;
+mkdir /bluefs/container;
+mkdir /bluefs/work;
+mkdir /bluefs/merge;
+
+mount -t overlay overlay -o lowerdir=/tmp/tools:/tmp/myroot,upperdir=/bluefs/container,workdir=/bluefs/work /bluefs/merge
+
+mkdir -p /bluefs/merge/put_old
+
+cd /bluefs/merge;
+pivot_root . put_old;
+cd /;
+
+(루트와 put_old 비교해 봅니다. 보안언급)
+
+mount -t proc proc /proc;
+umount -l put_old;
+rm -rf put_old;
+
+(프로세스 확인 및 PID네임스페이스 격리 언급)
+ps -ef
+
+(호스트네임 조회 후 아래 호스트네임 변경)
+hostname BLUE
+
+
+## 테스트
+
+### RED/BLUE ping
+(네트워크네임스페이스와 브릿지 통신 요약 설명)
+
+### 리소스 제한 확인
+(CPU 쓰로틀링 확인)
+(메모리 OOMKill 확인)
+
+
+## 실습환경 초기화 ======================
+ip netns del BLUE;ip netns del RED;
+cgdelete -g cpu:red;cgdelete -g memory:red;
+cgdelete -g cpu:blue;cgdelete -g memory:blue;
+rm -rf /redfs;rm -rf /bluefs;
+rm -rf /tmp/tools;

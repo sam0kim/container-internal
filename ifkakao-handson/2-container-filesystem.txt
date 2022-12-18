@@ -1,0 +1,87 @@
+# 컨테이너 파일시스템
+
+## chroot
+
+### sh 복사
+cd /tmp
+mkdir -p myroot/bin;
+cp /bin/sh myroot/bin/;
+mkdir -p myroot/{lib64,lib/x86_64-linux-gnu};
+cp /lib/x86_64-linux-gnu/libc.so.6 myroot/lib/x86_64-linux-gnu/;
+cp /lib64/ld-linux-x86-64.so.2 myroot/lib64;
+
+### ls 복사
+cp /bin/ls myroot/bin/;
+cp /lib/x86_64-linux-gnu/{libselinux.so.1,libc.so.6,libpcre.so.3,libdl.so.2,libpthread.so.0} myroot/lib/x86_64-linux-gnu/;
+cp /lib64/ld-linux-x86-64.so.2 myroot/lib64/;
+
+### 루트 및 격리 확인
+ls /
+cd ../../../
+ls
+cd /
+ls
+
+### Mission: ps복사 (혼자 꼭 해보세요)
+wget https://raw.githubusercontent.com/sam0kim/container-internal/main/scripts/chroot_ps.sh;
+bash chroot_ps.sh;
+
+### nginx 이미지 복사
+mkdir nginx-root
+docker export $(docker create nginx) | tar -C nginx-root -xvf -
+chroot nginx-root /bin/sh
+
+### 탈옥코드 작성
+vi escape_chroot.c
+```
+#include <sys/stat.h>
+#include <unistd.h>
+
+int main(void)
+{
+  mkdir(".out", 0755);
+  chroot(".out");
+  chdir("../../../../../");
+  chroot(".");
+  return execl("/bin/sh", "-i", NULL);
+}
+```
+
+### 탈옥코드 컴파일
+gcc -o myroot/escape_chroot escape_chroot.c
+
+
+## pivot_root
+
+### unshare 마운트네임스페이스
+unshare --mount /bin/sh
+mkdir new_root
+mount -t tmpfs none new_root
+
+### pivot_root
+cp -r myroot/* new_root
+
+mkdir new_root/put_old
+
+cd new_root
+pivot_root . put_old
+cd /
+
+
+## overlay mount
+
+### copy which
+mkdir -p tools/usr/bin;
+cp /usr/bin/which tools/usr/bin/;
+
+### copy rm
+mkdir -p tools/{bin,lib64,lib/x86_64-linux-gnu};
+cp /bin/rm tools/bin/;
+cp /lib/x86_64-linux-gnu/libc.so.6 tools/lib/x86_64-linux-gnu/;
+cp /lib64/ld-linux-x86-64.so.2 tools/lib64;
+
+### rootfs
+mkdir -p rootfs/{container,work,merge}
+
+mount -t overlay overlay -o lowerdir=tools:myroot,upperdir=rootfs/container,workdir=rootfs/work rootfs/merge
+
